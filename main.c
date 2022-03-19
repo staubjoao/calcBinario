@@ -6,6 +6,8 @@
 int somaBit(int b1, int b2, int b3, int *cout);
 void soma(int num1[BITS], int num2[BITS], int result[BITS]);
 void converteBinario(int num, int vet[BITS]);
+int subtraiBit(int b1, int b2, int b3, int *cout);
+void subtracao(int num1[BITS], int num2[BITS], int result[BITS]);
 
 int main()
 {
@@ -24,12 +26,24 @@ int main()
   converteBinario(num1, vetNum1);
   converteBinario(num2, vetNum2);
 
+  for (i = 0; i < BITS; i++)
+    printf("%d", vetNum1[i]);
+  printf("\n");
+  for (i = 0; i < BITS; i++)
+    printf("%d", vetNum2[i]);
+  printf("\n");
+
   if (op == '+')
   {
+    if (vetNum2[0] == 1)
+      subtracao(vetNum1, vetNum2, result);
     soma(vetNum1, vetNum2, result);
   }
-  else if (op == 4201808)
+  else if (op == '-')
   {
+    if (vetNum2[0] == 1)
+      soma(vetNum1, vetNum2, result);
+    subtracao(vetNum1, vetNum2, result);
   }
   else if (op == '*')
   {
@@ -56,6 +70,26 @@ void soma(int num1[BITS], int num2[BITS], int result[BITS])
   for (i = 15; i > 0; i--)
     result[i] = somaBit(num1[i], num2[i], aux, &aux);
   result[i] = aux;
+}
+
+int subtraiBit(int b1, int b2, int b3, int *cout)
+{
+  int c = b1 - b2;
+  if (c < 0)
+    c = 1, *cout = 1;
+  return c;
+}
+
+void subtracao(int num1[BITS], int num2[BITS], int result[BITS])
+{
+  int i, aux = 0;
+  for (i = 15; i > 0; i--)
+  {
+    result[i] = subtraiBit(num1[i], num2[i], aux, &aux);
+    if (num1[i] - num2[i] < 0)
+      num1[i - 1] = num1[i - 1] - aux;
+  }
+  result[i] = 0;
 }
 
 void converteBinario(int num, int vet[BITS])
