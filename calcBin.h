@@ -10,7 +10,7 @@ void zerarVetor(int *v);
 int randomInt(int min, int max) { return min + rand() % (max + 1 - min); }
 int deslocaDireita(int num[BITS], int c, int len);
 int verificaZero(int num1[BITS], int num2[BITS]);
-int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int lenNum1, int lenNum2);
+int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int len);
 void multiplicacao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM);
 void menuSub(int num1[BITS], int num2[BITS], int result[BITS]);
 void menuSoma(int num1[BITS], int num2[BITS], int result[BITS]);

@@ -64,11 +64,7 @@ int main()
         if (resultDec == num1 * num2)
           hit++;
         else
-        {
-          imprimeBin(vetNum1);
-          imprimeBin(vetNum2);
           miss++;
-        }
       }
     }
     else if (op == '/')
@@ -79,7 +75,7 @@ int main()
     zerarVetor(vetNum2);
     zerarVetor(result);
     cont--;
-  } while (cont > 0);
+  } while (cont > -15000);
   printf("\n\nHIT: %d MISS: %d\n", hit, miss);
 
   // for (i = 0; i < BITS; i++)
@@ -133,49 +129,46 @@ int deslocaDireita(int num[BITS], int c, int len)
   return r;
 }
 
-int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int lenNum1, int lenNum2)
+int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int len)
 {
-  int i, aux = 0, m;
-  if (lenNum1 > lenNum2)
-    m = lenNum1;
-  else
-    m = lenNum2;
-  for (i = 15; i > 15 - m; i--)
+  int i, aux = 0;
+  for (i = 15; i > 15 - len; i--)
     result[i] = somaBit(num1[i], num2[i], aux, &aux);
   return aux;
 }
 
 void multiplicacao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
 {
-  int i, cont, c = 0, sinal;
+  int i, cont, c = 0, sinal, maior;
   if ((Q[0] == 1 && M[0] == 0) || (Q[0] == 0 && M[0] == 1))
     sinal = 1;
   else
     sinal = 0;
   if (lenQ > lenM)
-    cont = lenQ;
+    cont = lenQ, maior = lenQ;
   else
-    cont = lenM;
+    cont = lenM, maior = lenM;
   while (cont > 0)
   {
     c = 0;
     if (Q[BITS - 1] == 1)
     {
-      c = somaMult(A, M, A, lenQ, lenM);
-      c = deslocaDireita(A, c, lenQ);
-      deslocaDireita(Q, c, lenQ);
+      c = somaMult(A, M, A, maior);
+      c = deslocaDireita(A, c, maior);
+      deslocaDireita(Q, c, maior);
     }
     else
     {
-      c = deslocaDireita(A, 0, lenQ);
-      deslocaDireita(Q, c, lenQ);
+      c = deslocaDireita(A, c, maior);
+      deslocaDireita(Q, c, maior);
     }
+
     cont--;
   }
 
-  for (i = BITS - (lenQ + lenQ); i < BITS - lenQ; i++)
-    A[i] = A[i + lenQ];
-  for (i = BITS - (lenQ); i < BITS; i++)
+  for (i = BITS - (maior + maior); i < BITS - maior; i++)
+    A[i] = A[i + maior];
+  for (i = BITS - (maior); i < BITS; i++)
     A[i] = Q[i];
   A[0] = sinal;
 }
