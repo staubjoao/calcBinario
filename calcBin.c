@@ -1,48 +1,183 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include "calcBin.h"
 
 int main()
 {
-  int vetNum1[BITS], vetNum2[BITS], result[BITS], num1, num2, i, resultDec;
-  char op;
+  int testes[7] = {1, 1, 1, 1, 1, 1, 1}, cont = 100, vetNum1[BITS], vetNum2[BITS], result[BITS], num1, num2, i, resultDec, lenNum1, lenNum2;
+  char op, ops[3] = {'*', '*', '*'};
+  int hit = 0, miss = 0;
 
-  printf("Digite o primeiro número: ");
-  scanf("%d", &num1);
-  printf("Digite a operação (+, -, * e /): ");
-  fflush(stdin);
-  scanf("%c", &op);
-  fflush(stdin);
-  printf("Digite o segundo número: ");
-  scanf("%d", &num2);
+  // printf("Digite o primeiro número: ");
+  // scanf("%4d", &num1);
+  // printf("Digite a operação (+, -, * e /): ");
+  // fflush(stdin);
+  // scanf("%c", &op);
+  // fflush(stdin);
+  // printf("Digite o segundo número: ");
+  // scanf("%4d", &num2);
 
-  converteBinario(num1, vetNum1);
-  converteBinario(num2, vetNum2);
+  srand(time(NULL));
 
-  for (i = 0; i < BITS; i++)
-    result[i] = 0;
+  do
+  {
+    num1 = randomInt(0, 30) * testes[randomInt(0, 6)];
+    num2 = randomInt(0, 30) * testes[randomInt(0, 6)];
+    op = ops[randomInt(0, 2)];
 
-  if (op == '+')
-  {
-    menuSoma(vetNum1, vetNum2, result);
-    resultDec = binarioDec(result);
-    printf("(%d) + (%d) = %d  |  %s", num1, num2, num1 + num2, resultDec == num1 + num2 ? "certo" : "errado");
-  }
-  else if (op == '-')
-  {
-    menuSub(vetNum1, vetNum2, result);
-    resultDec = binarioDec(result);
-    printf("(%d) - (%d) = %d  |  %s", num1, num2, num1 - num2, resultDec == num1 - num2 ? "certo" : "errado");
-  }
-  else if (op == '*')
-  {
-  }
-  else if (op == '/')
-  {
-  }
+    zerarVetor(result);
+    zerarVetor(vetNum1);
+    zerarVetor(vetNum2);
+    lenNum1 = converteBinario(num1, vetNum1);
+    lenNum2 = converteBinario(num2, vetNum2);
+
+    if (op == '+')
+    {
+      menuSoma(vetNum1, vetNum2, result);
+      resultDec = binarioDec(result);
+      printf("(%4d) + (%4d) = %4d  |  %s  %4d\n", num1, num2, num1 + num2, resultDec == num1 + num2 ? "certo" : "errado", resultDec);
+      if (resultDec == num1 + num2)
+        hit++;
+      else
+        miss++;
+    }
+    else if (op == '-')
+    {
+      menuSub(vetNum1, vetNum2, result);
+      resultDec = binarioDec(result);
+      printf("(%4d) - (%4d) = %4d  |  %s  %4d\n", num1, num2, num1 - num2, resultDec == num1 - num2 ? "certo" : "errado", resultDec);
+      if (resultDec == num1 - num2)
+        hit++;
+      else
+        miss++;
+    }
+    else if (op == '*')
+    {
+      if (verificaZero(vetNum1, vetNum2) == 1)
+      {
+        printf("(%4d) * (%4d) = %4d  |  %s\n", num1, num2, num1 * num2, "certo");
+        hit++;
+      }
+      else
+      {
+        multiplicacao(vetNum1, vetNum2, result, lenNum1, lenNum2);
+        resultDec = binarioDec(result);
+        printf("(%4d) * (%4d) = %4d  |  %s  %4d\n", num1, num2, num1 * num2, resultDec == num1 * num2 ? "certo" : "errado", resultDec);
+        if (resultDec == num1 * num2)
+          hit++;
+        else
+        {
+          imprimeBin(vetNum1);
+          imprimeBin(vetNum2);
+          miss++;
+        }
+      }
+    }
+    else if (op == '/')
+    {
+    }
+
+    zerarVetor(vetNum1);
+    zerarVetor(vetNum2);
+    zerarVetor(result);
+    cont--;
+  } while (cont > 0);
+  printf("\n\nHIT: %d MISS: %d\n", hit, miss);
+
+  // for (i = 0; i < BITS; i++)
+  //   result[i] = 0;
+  // for (i = 0; i < BITS; i++)
+  //   vetNum1[i] = 0;
+  // for (i = 0; i < BITS; i++)
+  //   vetNum2[i] = 0;
 
   return 0;
+}
+
+void divisao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
+{
+}
+
+void zerarVetor(int *v)
+{
+  for (int i = 0; i < BITS; i++)
+    v[i] = 0;
+}
+
+int verificaZero(int num1[BITS], int num2[BITS])
+{
+  int contNum1 = 0, contNum2 = 0;
+  for (int i = 1; i < BITS; i++)
+  {
+    if (num1[i] == 0)
+      contNum1++;
+    if (num2[i] == 0)
+      contNum2++;
+  }
+  if (contNum1 == 15 || contNum2 == 15)
+    return 1;
+  else
+    return 0;
+}
+
+int deslocaDireita(int num[BITS], int c, int len)
+{
+  int r, i;
+  if (num[BITS - 1] == 1)
+    r = 1;
+  else
+    r = 0;
+  for (i = BITS - 1; i > BITS - len; i--)
+  {
+    num[i] = num[i - 1];
+  }
+  num[i] = c;
+  return r;
+}
+
+int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int lenNum1, int lenNum2)
+{
+  int i, aux = 0, m;
+  if (lenNum1 > lenNum2)
+    m = lenNum1;
+  else
+    m = lenNum2;
+  for (i = 15; i > 15 - m; i--)
+    result[i] = somaBit(num1[i], num2[i], aux, &aux);
+  return aux;
+}
+
+void multiplicacao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
+{
+  int i, cont, c = 0, sinal;
+  if ((Q[0] == 1 && M[0] == 0) || (Q[0] == 0 && M[0] == 1))
+    sinal = 1;
+  else
+    sinal = 0;
+  if (lenQ > lenM)
+    cont = lenQ;
+  else
+    cont = lenM;
+  while (cont > 0)
+  {
+    c = 0;
+    if (Q[BITS - 1] == 1)
+    {
+      c = somaMult(A, M, A, lenQ, lenM);
+      c = deslocaDireita(A, c, lenQ);
+      deslocaDireita(Q, c, lenQ);
+    }
+    else
+    {
+      c = deslocaDireita(A, 0, lenQ);
+      deslocaDireita(Q, c, lenQ);
+    }
+    cont--;
+  }
+
+  for (i = BITS - (lenQ + lenQ); i < BITS - lenQ; i++)
+    A[i] = A[i + lenQ];
+  for (i = BITS - (lenQ); i < BITS; i++)
+    A[i] = Q[i];
+  A[0] = sinal;
 }
 
 void menuSub(int num1[BITS], int num2[BITS], int result[BITS])
@@ -75,9 +210,18 @@ void menuSoma(int num1[BITS], int num2[BITS], int result[BITS])
   else if (num1[0] == 0 && num2[0] == 1) // x + (-y)
     num2[0] = 0, menuSub(num1, num2, result);
   else if (num1[0] == 1 && num2[0] == 0) // -x + y
-    num1[0] = 0, menuSub(num1, num2, result);
+  {
+    num1[0] = 0;
+    int x = verificaMaior(num1, num2);
+    menuSub(num1, num2, result);
+    if (x == 1)
+      result[0] = 1;
+    else
+      result[0] = 0;
+  }
   else if (num1[0] == 1 && num2[0] == 1) // -x + (-y)
-    soma(num1, num2, result), result[0] = 1;
+    soma(num1, num2, result),
+        result[0] = 1;
 }
 
 void imprimeBin(int num[BITS])
@@ -135,12 +279,13 @@ int somaBit(int b1, int b2, int b3, int *cout)
   return ((b1 + b2 + b3) % 2);
 }
 
-void soma(int num1[BITS], int num2[BITS], int result[BITS])
+int soma(int num1[BITS], int num2[BITS], int result[BITS])
 {
   int i, aux = 0;
   for (i = 15; i > 0; i--)
     result[i] = somaBit(num1[i], num2[i], aux, &aux);
   result[i] = aux;
+  return aux;
 }
 
 int subtraiBit(int b1, int b2, int *cout)
@@ -168,20 +313,23 @@ void subtracao(int num1[BITS], int num2[BITS], int result[BITS])
   result[i] = 0;
 }
 
-void converteBinario(int num, int vet[BITS])
+int converteBinario(int num, int vet[BITS])
 {
-  int i, aux = num;
+  int i = BITS - 1, aux = num, cont = 0;
   if (num < 0)
     num = num * -1;
 
-  for (i = BITS - 1; i >= 0; i--)
+  while (num > 0)
   {
     if (num % 2 == 0)
       vet[i] = 0;
     else
       vet[i] = 1;
     num /= 2;
+    i--;
+    cont++;
   }
   if (aux < 0)
     vet[0] = 1;
+  return cont;
 }
