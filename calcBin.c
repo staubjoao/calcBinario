@@ -2,8 +2,8 @@
 
 int main()
 {
-  int testes[7] = {1, 1, 1, 1, 1, 1, 1}, cont = 100, vetNum1[BITS], vetNum2[BITS], result[BITS], num1, num2, i, resultDec, lenNum1, lenNum2;
-  char op, ops[3] = {'*', '*', '*'};
+  int testes[7] = {1, 1, 1, 1, 1, 1, 1}, cont = 100, vetNum1[BITS], vetNum2[BITS], result[BITS], resto[BITS], restoMod, num1, num2, i, resultDec, lenNum1, lenNum2;
+  char op, ops[3] = {'/', '/', '/'};
   int hit = 0, miss = 0;
 
   // printf("Digite o primeiro número: ");
@@ -69,13 +69,22 @@ int main()
     }
     else if (op == '/')
     {
+      // divisao(vetNum1, vetNum2, result, resto, lenNum1, lenNum2);
+      // resultDec = binarioDec(result);
+      // restoMod = binarioDec(resto);
+      // printf("(%4d) / (%4d) = %4d  resto: %4d  |  %s  %4d\n", num1, num2, num1 / num2, num1 % num2, resultDec == num1 / num2 ? "certo" : "errado", resultDec);
+      // if (resultDec == num1 / num2)
+      //   hit++;
+      // else
+      // miss++;
     }
 
     zerarVetor(vetNum1);
     zerarVetor(vetNum2);
     zerarVetor(result);
+    zerarVetor(resto);
     cont--;
-  } while (cont > -15000);
+  } while (cont > 0);
   printf("\n\nHIT: %d MISS: %d\n", hit, miss);
 
   // for (i = 0; i < BITS; i++)
@@ -88,7 +97,7 @@ int main()
   return 0;
 }
 
-void divisao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
+void divisao(int Q[BITS], int M[BITS], int A[BITS], int resto[BITS], int lenQ, int lenM)
 {
 }
 
