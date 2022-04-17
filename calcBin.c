@@ -69,14 +69,20 @@ int main()
     }
     else if (op == '/')
     {
-      // divisao(vetNum1, vetNum2, result, resto, lenNum1, lenNum2);
-      // resultDec = binarioDec(result);
-      // restoMod = binarioDec(resto);
-      // printf("(%4d) / (%4d) = %4d  resto: %4d  |  %s  %4d\n", num1, num2, num1 / num2, num1 % num2, resultDec == num1 / num2 ? "certo" : "errado", resultDec);
-      // if (resultDec == num1 / num2)
-      //   hit++;
-      // else
-      // miss++;
+      printf("%d ", cont);
+      divisao(vetNum1, vetNum2, result, resto, lenNum1, lenNum2);
+      resultDec = binarioDec(result);
+      restoMod = binarioDec(resto);
+      if (num2 == 0)
+        printf("Não existe divisão por 0\n");
+      else
+      {
+        printf("(%4d) / (%4d) = %4d  resto: %4d  |  %s  %4d\n", num1, num2, num1 / num2, num1 % num2, resultDec == num1 / num2 && restoMod == num1 % num2 ? "certo" : "errado", resultDec);
+        if (resultDec == num1 / num2)
+          hit++;
+        else
+          miss++;
+      }
     }
 
     zerarVetor(vetNum1);
@@ -99,6 +105,67 @@ int main()
 
 void divisao(int Q[BITS], int M[BITS], int A[BITS], int resto[BITS], int lenQ, int lenM)
 {
+  int i, cont = 0, sinal, maior;
+  if ((Q[0] == 1 && M[0] == 0) || (Q[0] == 0 && M[0] == 1))
+    sinal = 1;
+  else
+    sinal = 0;
+  if (lenQ > lenM)
+    cont = lenQ, maior = lenQ;
+  else
+    cont = lenM, maior = lenM;
+  
+}
+
+int deslocaEsquerda(int num[BITS], int c, int len)
+{
+  int r, i;
+  if (num[BITS - 1] == 1)
+    r = 1;
+  else
+    r = 0;
+  for (i = BITS - 1; i > BITS - len; i--)
+  {
+    num[i] = num[i - 1];
+  }
+  num[i] = c;
+  return r;
+}
+
+void multiplicacao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
+{
+  int i, cont, c = 0, sinal, maior;
+  if ((Q[0] == 1 && M[0] == 0) || (Q[0] == 0 && M[0] == 1))
+    sinal = 1;
+  else
+    sinal = 0;
+  if (lenQ > lenM)
+    cont = lenQ, maior = lenQ;
+  else
+    cont = lenM, maior = lenM;
+  while (cont > 0)
+  {
+    c = 0;
+    if (Q[BITS - 1] == 1)
+    {
+      c = somaMult(A, M, A, maior);
+      c = deslocaDireita(A, c, maior);
+      deslocaDireita(Q, c, maior);
+    }
+    else
+    {
+      c = deslocaDireita(A, c, maior);
+      deslocaDireita(Q, c, maior);
+    }
+
+    cont--;
+  }
+
+  for (i = BITS - (maior + maior); i < BITS - maior; i++)
+    A[i] = A[i + maior];
+  for (i = BITS - (maior); i < BITS; i++)
+    A[i] = Q[i];
+  A[0] = sinal;
 }
 
 void zerarVetor(int *v)
@@ -144,42 +211,6 @@ int somaMult(int num1[BITS], int num2[BITS], int result[BITS], int len)
   for (i = 15; i > 15 - len; i--)
     result[i] = somaBit(num1[i], num2[i], aux, &aux);
   return aux;
-}
-
-void multiplicacao(int Q[BITS], int M[BITS], int A[BITS], int lenQ, int lenM)
-{
-  int i, cont, c = 0, sinal, maior;
-  if ((Q[0] == 1 && M[0] == 0) || (Q[0] == 0 && M[0] == 1))
-    sinal = 1;
-  else
-    sinal = 0;
-  if (lenQ > lenM)
-    cont = lenQ, maior = lenQ;
-  else
-    cont = lenM, maior = lenM;
-  while (cont > 0)
-  {
-    c = 0;
-    if (Q[BITS - 1] == 1)
-    {
-      c = somaMult(A, M, A, maior);
-      c = deslocaDireita(A, c, maior);
-      deslocaDireita(Q, c, maior);
-    }
-    else
-    {
-      c = deslocaDireita(A, c, maior);
-      deslocaDireita(Q, c, maior);
-    }
-
-    cont--;
-  }
-
-  for (i = BITS - (maior + maior); i < BITS - maior; i++)
-    A[i] = A[i + maior];
-  for (i = BITS - (maior); i < BITS; i++)
-    A[i] = Q[i];
-  A[0] = sinal;
 }
 
 void menuSub(int num1[BITS], int num2[BITS], int result[BITS])

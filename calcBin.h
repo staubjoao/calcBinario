@@ -7,6 +7,7 @@
 #include <math.h>
 
 void divisao(int Q[BITS], int M[BITS], int A[BITS], int resto[BITS], int lenQ, int lenM);
+int deslocaEsquerda(int num[BITS], int c, int len);
 void zerarVetor(int *v);
 int randomInt(int min, int max) { return min + rand() % (max + 1 - min); }
 int deslocaDireita(int num[BITS], int c, int len);
